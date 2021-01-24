@@ -1,4 +1,4 @@
-Consolidated ROS packages for [myCobot](https://www.elephantrobotics.com/en/myCobot-en/) 6DOF manipulator. The driver has been rewritten to support closed-loop operation when using MoveIt. Most of the functions have been based on the original driver found [here](https://github.com/elephantrobotics/myCobotROS).
+Consolidated ROS packages for [myCobot](https://www.elephantrobotics.com/en/myCobot-en/) 6DOF manipulator. The driver has been rewritten to support closed-loop operation when using MoveIt. Most of the functions are based on the original driver found [here](https://github.com/elephantrobotics/myCobotROS).
 
 ## 1. Installation:
 
@@ -10,8 +10,8 @@ Consolidated ROS packages for [myCobot](https://www.elephantrobotics.com/en/myCo
     cd ..
     rosdep install --from-paths src --ignore-src -r -y
 
-### 1.2 Install Firmware to board
-You need to upload version 2.1 Alpha firmware to Atom Board for the driver to work. You can find the [here](https://github.com/elephantrobotics/myCobot/releases/tag/0).
+### 1.2 Firmware Installation
+You need to upload version 2.1 Alpha firmware to the Atom Board for the ROS driver to work. You can find the released binaries [here](https://github.com/elephantrobotics/myCobot/releases/tag/0).
 
 The main board must also be uploaded with Transponder firmware found in the link above.
 
