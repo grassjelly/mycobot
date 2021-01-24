@@ -11,11 +11,11 @@ Consolidated ROS packages for [myCobot](https://www.elephantrobotics.com/en/myCo
     rosdep install --from-paths src --ignore-src -r -y
 
 ### 1.2 Install Firmware to board
-You need to upload version 2.1 Alpha firmware to Atom Board for the driver to work. You can find out the binaries [here](https://github.com/elephantrobotics/myCobot/releases/tag/0)
+You need to upload version 2.1 Alpha firmware to Atom Board for the driver to work. You can find the [here](https://github.com/elephantrobotics/myCobot/releases/tag/0).
 
 The main board must also be uploaded with Transponder firmware found in the link above.
 
-Here's a CLI sample on how to burn the Atom firmware in Linux:
+Here's a CLI sample on how to burn the Atom firmware in Linux using [esptool](https://github.com/espressif/esptool):
 
     python esptool.py -b 1500000 --port /dev/ttyUSB0 write_flash --flash_freq 80m 0x0000e000 boot_app0.bin 0x00001000 bootloader_qio_80m.bin 0x00010000 Atom2.1alpha.ino.bin 
 
