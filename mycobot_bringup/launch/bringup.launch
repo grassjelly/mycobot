@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="model" default="$(find myCobotROS)/urdf/mycobot_urdf.urdf"/>
+    <arg name="rviz"  default="false"/>
+    <arg name="joints_gui" default="false"/>
+
+    <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+    <node name="mycobot_driver" pkg="mycobot_driver" type="driver.py" output="screen"/>
+
+    <node if="$(arg joints_gui)" name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui">
+        <remap from="joint_states" to="joints_gui" />
+    </node>
+    <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz" 
+          args="-d $(find mycobot_bringup)/launch/mycobot.rviz" output="screen"/>
+</launch>
