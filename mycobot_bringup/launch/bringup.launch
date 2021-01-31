@@ -1,11 +1,9 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="model" default="$(find myCobotROS)/urdf/mycobot_urdf.urdf"/>
-    <arg name="rviz"  default="false"/>
+    <arg name="rviz"       default="false"/>
     <arg name="joints_gui" default="false"/>
 
-    <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)" />
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <include file="$(find mycobot_description)/launch/description.launch"/>
 
     <node name="mycobot_driver" pkg="mycobot_driver" type="driver.py" output="screen"/>
 
