@@ -3,7 +3,9 @@ Panels:
     Help Height: 78
     Name: Displays
     Property Tree Widget:
-      Expanded: ~
+      Expanded:
+        - /Global Options1
+        - /Axes1
       Splitter Ratio: 0.5
     Tree Height: 549
   - Class: rviz/Selection
@@ -60,6 +62,10 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
+        base_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         joint1:
           Alpha: 1
           Show Axes: false
@@ -106,6 +112,8 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
+        base_mount:
+          Value: true
         joint1:
           Value: true
         joint2:
@@ -126,21 +134,29 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        joint1:
-          joint2:
-            joint3:
-              joint4:
-                joint5:
-                  joint6:
-                    joint6_flange:
-                      {}
+        base_mount:
+          joint1:
+            joint2:
+              joint3:
+                joint4:
+                  joint5:
+                    joint6:
+                      joint6_flange:
+                        {}
       Update Interval: 0
+      Value: true
+    - Class: rviz/Axes
+      Enabled: true
+      Length: 1
+      Name: Axes
+      Radius: 0.0010000000474974513
+      Reference Frame: <Fixed Frame>
       Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: joint1
+    Fixed Frame: base_mount
     Frame Rate: 30
   Name: root
   Tools:
@@ -164,25 +180,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 0.8509852886199951
+      Distance: 0.9829238653182983
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.04269776493310928
-        Y: -0.001720990752801299
-        Z: 0.196560800075531
+        X: 0.041300274431705475
+        Y: -0.01521302480250597
+        Z: 0.22491714358329773
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.32479771971702576
+      Pitch: 0.2847977578639984
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 2.595393180847168
+      Yaw: 0.5553925037384033
     Saved: ~
 Window Geometry:
   Displays:
@@ -201,4 +217,4 @@ Window Geometry:
     collapsed: true
   Width: 1200
   X: 617
-  Y: 54
+  Y: 27
