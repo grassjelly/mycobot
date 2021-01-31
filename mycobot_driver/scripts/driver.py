@@ -31,15 +31,14 @@ from sensor_msgs.msg import JointState
 from mycobot.mycobot import MyCobot
 
 class Driver:
-    def __init__(self, serial_port='/dev/ttyUSB0'):
-        self.lock = Lock()
-
+    def __init__(self):
+        serial_port = rospy.get_param('~serial_port', '/dev/ttyUSB0')
         self.robot = MyCobot(serial_port)
+        self.lock = Lock()
 
         rospy.Subscriber("gripper", Bool, self.gripper_cmd_callback)
         rospy.Subscriber("move_group/fake_controller_joint_states", JointState, self.joints_cmd_callback)
         rospy.Subscriber("joints_gui", JointState, self.joints_gui_callback)
-
         self.joint_states_pub = rospy.Publisher('joint_states', JointState, queue_size = 1)
 
         self.joint_names = ['joint2_to_joint1', 
@@ -123,5 +122,5 @@ class Driver:
 
 if __name__ == "__main__":
     rospy.init_node('mycobot_driver', anonymous=True)
-    d = Driver('/dev/ttyUSB0')
+    d = Driver()
     rospy.spin()

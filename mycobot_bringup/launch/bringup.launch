@@ -1,11 +1,14 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="rviz"       default="false"/>
-    <arg name="joints_gui" default="false"/>
+    <arg name="serial_port" default="/dev/ttyUSB0"/>
+    <arg name="rviz"        default="false"/>
+    <arg name="joints_gui"  default="false"/>
 
     <include file="$(find mycobot_description)/launch/description.launch"/>
 
-    <node name="mycobot_driver" pkg="mycobot_driver" type="driver.py" output="screen"/>
+    <node name="mycobot_driver" pkg="mycobot_driver" type="driver.py" output="screen">
+        <param name="serial_port" value="$(arg serial_port)" />
+    </node>
 
     <node if="$(arg joints_gui)" name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui">
         <remap from="joint_states" to="joints_gui" />
