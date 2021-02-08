@@ -11,22 +11,26 @@ Consolidated ROS packages for [myCobot](https://www.elephantrobotics.com/en/myCo
     rosdep install --from-paths src --ignore-src -r -y
 
 ### 1.2 Firmware Installation
-You need to upload version 2.3Mainfirmware to the Atom Board for the ROS driver to work. You can find the released binaries [here](https://github.com/elephantrobotics/myCobot/releases/tag/0).
-
-The main board must also be uploaded with Transponder firmware found in the link above.
-
-Here's a CLI sample on how to burn the Atom firmware in Linux using [esptool](https://github.com/espressif/esptool):
+Download the latest software release [here](https://github.com/elephantrobotics/myCobot/releases/tag/0) and run the following commands to upload the firmware using [esptool](https://github.com/espressif/esptool):
 
 First install esptool:
 
     pip install esptool
 
-Go to the firmware directory and run:
+Atom Board Firmware:
 
-    python esptool.py -b 1500000 --port /dev/ttyUSB0 write_flash --flash_freq 80m 0x0000e000 boot_app0.bin 0x00001000 bootloader_qio_80m.bin 0x00010000 AtomMain2.3.ino.bin 0x00008000 AtomMain2.3.ino.partitions.bin
+    cd <latest_release_ino_folder>
+    esptool.py -b 1500000 --port /dev/ttyUSB0 write_flash --flash_freq 80m 0x0000e000 boot_app0.bin 0x00001000 bootloader_qio_80m.bin 0x00010000 AtomMain2.5.ino.bin 0x00008000 AtomMain2.5.ino.partitions.bin
 
+Base Board Firmware:
 
-There's also a copy of the Transponder's source code in mycobot/firmware/base which you can use to upload using [PlatformIO](https://platformio.org/)
+    cd <latest_release_ino_folder>
+    esptool.py -b 1500000 --port /dev/ttyUSB0 write_flash --flash_freq 80m 0x0000e000 boot_app0.bin 0x00001000 bootloader_qio_80m.bin 0x00010000 Transponder.ino.bin 0x00008000 Transponder.ino.partitions.bin
+
+Calibration Firmware:
+
+    cd <latest_release_ino_folder>
+    esptool.py -b 1500000 --port /dev/ttyUSB0 write_flash --flash_freq 80m 0x0000e000 boot_app0.bin 0x00001000 bootloader_qio_80m.bin 0x00010000 Calibration.ino.bin 0x00008000 Calibration.ino.partitions.bin
 
 ## 2. Running the driver:
 
