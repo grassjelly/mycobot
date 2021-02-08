@@ -53,22 +53,22 @@ class Driver:
         self.gripper_cmd = False
         self.gripper_cmd_ack = True
 
-        self.last_cmd_time = rospy.Time.now()
-
         self.joint_states_msg = JointState()
         self.joint_states_msg.header.frame_id = 'joint1'
         self.joint_states_msg.header.stamp = rospy.Time.now()
         self.joint_states_msg.name = self.joint_names
 
+        self.on_moveit = False
+
         # self.robot.set_claw(False)
         self.robot.power_on()
         control_rate = rospy.Rate(30)
         while not rospy.is_shutdown():
-            cur_actuator_angle = self.robot.get_angles_of_radian()
+            cur_actuator_angle = self.robot.get_radians()
             if len(cur_actuator_angle) == 6:
                 self.joint_states = self.invert_joints(cur_actuator_angle)
-          
-            self.robot.send_angles_by_radian(self.joints_cmd, 80)
+            # print(self.joints_cmd)
+            self.robot.send_radians(self.joints_cmd, 80)
 
             if not self.gripper_cmd_ack:
                 rospy.loginfo("GRIPPER %d", self.gripper_cmd)
@@ -88,6 +88,7 @@ class Driver:
 
     def joints_cmd_callback(self, joints_cmd):
         with self.lock:
+            self.on_moveit = True
             self.last_cmd_time = rospy.Time.now()
             for joint_name, joint_position in zip(joints_cmd.name, joints_cmd.position):
                 try:
@@ -102,9 +103,9 @@ class Driver:
                 self.joints_cmd[j_idx] = joint_position * invert
 
     def joints_gui_callback(self, joints_cmd):
+        if self.on_moveit:
+            return
         with self.lock:
-            if (rospy.Time.now() - self.last_cmd_time).to_sec() < 0.1:
-                return
             for joint_name, joint_position in zip(joints_cmd.name, joints_cmd.position):
                 try:
                     j_idx = self.joint_names.index(joint_name)
