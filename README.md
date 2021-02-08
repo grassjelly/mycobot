@@ -39,3 +39,8 @@ Calibration Firmware:
 Available Arguments:
 - rviz - Launch the driver together with RViz
 - joints_gui - Launch the driver together with a GUI to control the robot's joints
+
+## Resources:
+
+Mycobot Python API: https://github.com/elephantrobotics/pymycobot
+Feetech Library: https://github.com/ZachJiang/SCServo_arduino_lib
