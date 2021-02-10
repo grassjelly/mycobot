@@ -60,20 +60,23 @@ class Driver:
 
         self.on_moveit = False
 
-        # self.robot.set_claw(False)
         self.robot.power_on()
+        self.robot.set_pwm_mode(22, 0)
+        self.robot.set_pwm_output(0, 0)
+
         control_rate = rospy.Rate(30)
         while not rospy.is_shutdown():
             cur_actuator_angle = self.robot.get_radians()
             if len(cur_actuator_angle) == 6:
                 self.joint_states = self.invert_joints(cur_actuator_angle)
-            # print(self.joints_cmd)
             self.robot.send_radians(self.joints_cmd, 80)
 
             if not self.gripper_cmd_ack:
-                rospy.loginfo("GRIPPER %d", self.gripper_cmd)
                 self.gripper_cmd_ack = True
-                # self.robot.set_claw(self.gripper_cmd)
+                if self.gripper_cmd:
+                    self.robot.set_pwm_output(0, 200)
+                else:
+                    self.robot.set_pwm_output(0, 0)
 
             self.joint_states_msg.position = self.joint_states
             self.joint_states_msg.header.stamp = rospy.Time.now()
@@ -120,7 +123,7 @@ class Driver:
                 joints[i] *= -1.0
         
         return joints
-
+        
 if __name__ == "__main__":
     rospy.init_node('mycobot_driver', anonymous=True)
     d = Driver()

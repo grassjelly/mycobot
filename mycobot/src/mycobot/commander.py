@@ -27,8 +27,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import rospy
 import sys
 import moveit_commander
-from moveit_msgs.msg import *
-from geometry_msgs.msg import *
+from moveit_msgs.msg import DisplayTrajectory
+from geometry_msgs.msg import Pose, PoseStamped, Quaternion
+from std_msgs.msg import Bool
 from tf.transformations import quaternion_from_euler, euler_from_quaternion
 import tf2_ros
 import tf2_geometry_msgs
@@ -38,7 +39,9 @@ class MyCobotCommander:
         moveit_commander.roscpp_initialize(sys.argv)
         self.group = moveit_commander.MoveGroupCommander(group_name)
         self.display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',
-                                                             moveit_msgs.msg.DisplayTrajectory, queue_size = 10)
+                                                             DisplayTrajectory, queue_size = 10)
+
+        self.gripper_pub = rospy.Publisher('gripper', Bool, queue_size = 1)
 
         self.pose_debugger = rospy.Publisher('pose_debug', 
                                               PoseStamped,
@@ -91,7 +94,7 @@ class MyCobotCommander:
             except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
                 raise
 
-        goal_pose = geometry_msgs.msg.Pose()
+        goal_pose = Pose()
         goal_pose.position.x = pos_x
         goal_pose.position.y = pos_y
         goal_pose.position.z = pos_z
@@ -108,7 +111,7 @@ class MyCobotCommander:
         return ret
             
     def visualize_goal_pose(self, pos_x, pos_y, pos_z, orient_roll, orient_pitch, orient_yaw):
-        goal_pose = geometry_msgs.msg.Pose()
+        goal_pose = Pose()
         goal_pose.position.x = pos_x
         goal_pose.position.y = pos_y
         goal_pose.position.z = pos_z
@@ -117,8 +120,18 @@ class MyCobotCommander:
         self.group.set_pose_target(goal_pose)
         plan = self.group.plan()
 
-        goal_pose_stamped = geometry_msgs.msg.PoseStamped()
+        goal_pose_stamped = PoseStamped()
         goal_pose_stamped.header.frame_id = self.robot.get_planning_frame()
         goal_pose_stamped.pose = goal_pose
 
         self.pose_debugger.publish(goal_pose_stamped)
+
+    def open_gripper(self):
+        cmd = Bool()
+        cmd.data = 0
+        self.gripper_pub.publish(cmd)
+
+    def close_gripper(self):
+        cmd = Bool()
+        cmd.data = 1
+        self.gripper_pub.publish(cmd)

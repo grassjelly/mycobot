@@ -16,6 +16,6 @@ while True:
     robot.send_radians([0,0,0,0,0,0], 80)
     robot.set_pwm_output(channel,0)
     time.sleep(3)
-    robot.set_pwm_output(channel, 125)
+    robot.set_pwm_output(channel, 200)
     time.sleep(3)
 
