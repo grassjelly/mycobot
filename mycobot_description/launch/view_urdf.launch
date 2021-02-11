@@ -5,8 +5,8 @@
 
     <include file="$(find mycobot_description)/launch/description.launch" />
 
-    <node if="$(arg joints_gui)" name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"/>
+    <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"/>
 
-    <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz" 
+    <node name="rviz" pkg="rviz" type="rviz" 
           args="-d $(find mycobot_bringup)/launch/mycobot.rviz" output="screen"/>
 </launch>
