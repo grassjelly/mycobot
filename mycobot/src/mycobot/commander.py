@@ -35,7 +35,7 @@ import tf2_ros
 import tf2_geometry_msgs
 
 class MyCobotCommander:
-    def __init__(self, group_name="mycobot_arm", position_tolerance=0.001, orientation_tolerance=0.00872665):
+    def __init__(self, group_name="mycobot_arm", position_tolerance=0.001, orientation_tolerance=0.000001):
         moveit_commander.roscpp_initialize(sys.argv)
         self.group = moveit_commander.MoveGroupCommander(group_name)
         self.display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',
