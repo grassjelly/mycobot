@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+import time
 import math
 import rospy
 from mycobot.commander import MyCobotCommander
@@ -8,12 +9,20 @@ if __name__ == "__main__":
     rospy.init_node("moveit_test", anonymous = True, disable_signals=True)
     
     manipulator = MyCobotCommander()
+    time.sleep(1)
     manipulator.open_gripper()
+    time.sleep(1)
+    manipulator.close_gripper()
+    time.sleep(1)
+    manipulator.open_gripper()
+    time.sleep(1)
     while not rospy.is_shutdown():
         target_x = 0.2
         target_y = 0.0
         target_z = 0.055
-        manipulator.open_gripper()
+        manipulator.close_gripper()
+        time.sleep(1)
+
         manipulator.move_to_goal_pose(target_x, 
                                       target_y, 
                                       target_z, 
@@ -21,5 +30,7 @@ if __name__ == "__main__":
                                       pitch=1.5708,
                                       yaw=0.0)
 
-        manipulator.set_gripper_dist(0.001)
+        manipulator.set_gripper_dist(0.009)
+        time.sleep(1)
+
         break
