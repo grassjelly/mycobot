@@ -25,7 +25,8 @@ volatile uint8_t counter = 0;
 SIGNAL(TIMER0_COMPA_vect) 
 {
 	counter += 2;
-	if (counter >= 20) {
+	if (counter >= 20) 
+	{
 		counter = 0;
 		digitalWrite(SERVO_PIN, HIGH);
 		delayMicroseconds(g_pulse);
