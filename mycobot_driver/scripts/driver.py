@@ -24,19 +24,24 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
+import copy
 from threading import Lock
 import rospy
-from std_msgs.msg import Bool
+from std_msgs.msg import Float32
 from sensor_msgs.msg import JointState
 from mycobot.mycobot import MyCobot
 
 class Driver:
     def __init__(self):
-        serial_port = rospy.get_param('~serial_port', '/dev/ttyUSB0')
-        self.robot = MyCobot(serial_port)
         self.lock = Lock()
 
-        rospy.Subscriber("gripper", Bool, self.gripper_cmd_callback)
+        serial_port = rospy.get_param('~serial_port', '/dev/ttyUSB0')
+        self.robot = MyCobot(serial_port)
+        self.robot.power_on()
+        self.robot.set_pwm_mode(22, 0)
+        self.robot.set_pwm_output(0, 0)
+
+        rospy.Subscriber("gripper", Float32, self.gripper_cmd_callback)
         rospy.Subscriber("move_group/fake_controller_joint_states", JointState, self.joints_cmd_callback)
         rospy.Subscriber("joints_gui", JointState, self.joints_gui_callback)
         self.joint_states_pub = rospy.Publisher('joint_states', JointState, queue_size = 1)
@@ -50,19 +55,16 @@ class Driver:
 
         self.joints_cmd = [0, 0, 0, 0, 0, 0]
         self.joint_states = [0, 0, 0, 0, 0, 0]
-        self.gripper_cmd = False
+        self.gripper_cmd = 0.018
         self.gripper_cmd_ack = True
 
         self.joint_states_msg = JointState()
         self.joint_states_msg.header.frame_id = 'joint1'
         self.joint_states_msg.header.stamp = rospy.Time.now()
-        self.joint_states_msg.name = self.joint_names
+        self.joint_states_msg.name = self.joint_names + ['gripper_base_to_l_finger']
+        self.joint_states_msg.position = self.joint_states + [self.gripper_cmd]
 
         self.on_moveit = False
-
-        self.robot.power_on()
-        self.robot.set_pwm_mode(22, 0)
-        self.robot.set_pwm_output(0, 0)
 
         control_rate = rospy.Rate(30)
         while not rospy.is_shutdown():
@@ -73,12 +75,11 @@ class Driver:
 
             if not self.gripper_cmd_ack:
                 self.gripper_cmd_ack = True
-                if self.gripper_cmd:
-                    self.robot.set_pwm_output(0, 200)
-                else:
-                    self.robot.set_pwm_output(0, 0)
+                pwm = self.dist_to_pwm(self.gripper_cmd)
+                self.robot.set_pwm_output(0, pwm)
 
-            self.joint_states_msg.position = self.joint_states
+            self.joint_states_msg.position[0:6] = self.joint_states
+            self.joint_states_msg.position[6] = self.gripper_cmd
             self.joint_states_msg.header.stamp = rospy.Time.now()
             self.joint_states_pub.publish(self.joint_states_msg)
 
@@ -110,6 +111,11 @@ class Driver:
             return
         with self.lock:
             for joint_name, joint_position in zip(joints_cmd.name, joints_cmd.position):
+                if joint_name == 'gripper_base_to_l_finger':
+                    self.gripper_cmd_ack = False
+                    self.gripper_cmd = joint_position
+                    continue
+                    
                 try:
                     j_idx = self.joint_names.index(joint_name)
                 except ValueError:
@@ -123,7 +129,10 @@ class Driver:
                 joints[i] *= -1.0
         
         return joints
-        
+
+    def dist_to_pwm(self, dist):
+        return 200 - int((dist / 0.018) * 200)
+
 if __name__ == "__main__":
     rospy.init_node('mycobot_driver', anonymous=True)
     d = Driver()

@@ -10,21 +10,16 @@ if __name__ == "__main__":
     manipulator = MyCobotCommander()
     manipulator.open_gripper()
     while not rospy.is_shutdown():
-        target_x = 0.15
-        target_y = 0.15
-        target_z = 0.15
+        target_x = 0.2
+        target_y = 0.0
+        target_z = 0.055
+        manipulator.open_gripper()
         manipulator.move_to_goal_pose(target_x, 
                                       target_y, 
                                       target_z, 
-                                      ref_frame="base_mount")
-        manipulator.close_gripper()
-        rospy.sleep(2)
-        manipulator.move_to_goal_pose(target_x, 
-                                      0.0, 
-                                      target_z, 
                                       roll=0.0,
-                                      pitch=0.0,
-                                      yaw=0.0,
-                                      ref_frame="base_mount")
-        manipulator.open_gripper()
+                                      pitch=1.5708,
+                                      yaw=0.0)
+
+        manipulator.set_gripper_dist(0.001)
         break

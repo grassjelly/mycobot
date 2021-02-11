@@ -29,19 +29,19 @@ import sys
 import moveit_commander
 from moveit_msgs.msg import DisplayTrajectory
 from geometry_msgs.msg import Pose, PoseStamped, Quaternion
-from std_msgs.msg import Bool
+from std_msgs.msg import Float32
 from tf.transformations import quaternion_from_euler, euler_from_quaternion
 import tf2_ros
 import tf2_geometry_msgs
 
 class MyCobotCommander:
-    def __init__(self, group_name="mycobot_arm", position_tolerance=0.001, orientation_tolerance=0.0349066):
+    def __init__(self, group_name="mycobot_arm", position_tolerance=0.001, orientation_tolerance=0.00872665):
         moveit_commander.roscpp_initialize(sys.argv)
         self.group = moveit_commander.MoveGroupCommander(group_name)
         self.display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',
                                                              DisplayTrajectory, queue_size = 10)
 
-        self.gripper_pub = rospy.Publisher('gripper', Bool, queue_size = 1)
+        self.gripper_pub = rospy.Publisher('gripper', Float32, queue_size = 1)
 
         self.pose_debugger = rospy.Publisher('pose_debug', 
                                               PoseStamped,
@@ -53,6 +53,7 @@ class MyCobotCommander:
 
         self.group.set_goal_position_tolerance(position_tolerance)
         self.group.set_goal_orientation_tolerance(orientation_tolerance)
+        self.group.set_end_effector_link('tool0')
 
     def create_obstacle(self, object_name, pos_x, pos_y, pos_z, size_x, size_y, size_z):
         obstacle = PoseStamped()
@@ -127,11 +128,21 @@ class MyCobotCommander:
         self.pose_debugger.publish(goal_pose_stamped)
 
     def open_gripper(self):
-        cmd = Bool()
-        cmd.data = 0
+        cmd = Float32()
+        cmd.data = 0.018
         self.gripper_pub.publish(cmd)
 
     def close_gripper(self):
-        cmd = Bool()
-        cmd.data = 1
+        cmd = Float32()
+        cmd.data = 0.0
+        self.gripper_pub.publish(cmd)
+
+    def set_gripper_dist(self, dist):
+        cmd = Float32()
+        if dist > 0.18:
+            dist = 0.18
+        elif dist < 0:
+            dist = 0.0
+
+        cmd_data = dist
         self.gripper_pub.publish(cmd)
