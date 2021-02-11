@@ -41,7 +41,7 @@ class MyCobotCommander:
         self.display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',
                                                              DisplayTrajectory, queue_size = 10)
 
-        self.gripper_pub = rospy.Publisher('gripper', Float32, queue_size = 1)
+        self.gripper_pub = rospy.Publisher('gripper', Float32, queue_size = 10)
 
         self.pose_debugger = rospy.Publisher('pose_debug', 
                                               PoseStamped,
@@ -139,10 +139,11 @@ class MyCobotCommander:
 
     def set_gripper_dist(self, dist):
         cmd = Float32()
-        if dist > 0.18:
-            dist = 0.18
-        elif dist < 0:
+        if dist > 0.018:
+            dist = 0.018
+        elif dist < 0.0:
             dist = 0.0
 
-        cmd_data = dist
+        cmd.data = dist
         self.gripper_pub.publish(cmd)
+        
