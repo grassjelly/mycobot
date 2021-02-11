@@ -43,5 +43,7 @@ Available Arguments:
 ## Resources:
 
 Mycobot Python API: https://github.com/elephantrobotics/pymycobot
-Feetech Library: https://github.com/ZachJiang/SCServo_arduino_lib
+
+Servo ID Writer: https://github.com/ZachJiang/SCServo_arduino_lib
+
 Adafruit's Software Servo: https://github.com/adafruit/Adafruit_SoftServo/blob/master/Adafruit_SoftServo.cpp
