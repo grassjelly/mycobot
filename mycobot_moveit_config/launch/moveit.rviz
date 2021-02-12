@@ -136,7 +136,7 @@ Visualization Manager:
         Robot Alpha: 0.5
         Robot Color: 150; 50; 150
         Show Robot Collision: false
-        Show Robot Visual: true
+        Show Robot Visual: false
         Show Trail: true
         State Display Time: 0.05 s
         Trail Step Size: 1
@@ -330,7 +330,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 1.2181146144866943
+      Distance: 2.2361435890197754
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -345,10 +345,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.34979692101478577
+      Pitch: 0.20479680597782135
       Target Frame: base_mount
       Value: XYOrbit (rviz)
-      Yaw: 0.7717668414115906
+      Yaw: 1.3717683553695679
     Saved: ~
 Window Geometry:
   Displays:
@@ -366,5 +366,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1407
-  X: 580
-  Y: 58
+  X: 286
+  Y: 194

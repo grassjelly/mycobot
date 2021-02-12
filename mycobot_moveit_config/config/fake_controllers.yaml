@@ -1,5 +1,7 @@
+rate: 10 
 controller_list:
   - name: fake_mycobot_arm_controller
+    type: interpolate
     joints:
       - joint2_to_joint1
       - joint3_to_joint2
@@ -12,4 +14,4 @@ controller_list:
       - gripper_base_to_l_finger
 initial:  # Define initial robot poses.
   - group: mycobot_arm
-    pose: init
+    pose: rest
